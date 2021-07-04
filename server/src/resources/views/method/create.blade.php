@@ -27,20 +27,17 @@
                       <form method="POST" action="{{route('method.store')}}">
                       @csrf
                       支払方法
-                      <input type="text" name="methods_name">
+                      <input type="text" name="method_name">
                       <br>
                       締め日
-                      <input type="text" name="closing_date">
+                      <input type="text" name="closing_date" maxlength="2" size="2">日
                       <br>
                       支払口座
-                      <select name="age">
-                        <option value="">選択してください</option>
-                        <option value="1">～19歳</option>
-                        <option value="2">20歳～29歳</option>
-                        <option value="3">30歳～39歳</option>
-                        <option value="4">40歳～49歳</option>
-                        <option value="5">50歳～59歳</option>
-                        <option value="6">60歳～</option>
+                      <select name="bank_id">
+                          <option value="">選択してください</option>
+                        @foreach ($banks as $bank)
+                        <option value="{{ $bank->id }}" > {{ $bank->bank_name }} </option>
+                        @endforeach
                       </select>
                       <br>
                       <input class="btn btn-info" type="submit" value="登録する">

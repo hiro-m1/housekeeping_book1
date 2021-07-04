@@ -23,23 +23,28 @@
                         </ul>
                     </div>
                     @endif
-                    <form method="POST" action="{{ route('bank.update', ['id' => $bank->id]) }}">
+                    <form method="POST" action="{{ route('method.update', ['id' => $method->id]) }}">
                     @csrf
 
-                    銀行名
-                      <input type="text" name="bank_name" value="{{ $bank->bank_name }}">
+                    支払方法
+                      <input type="text" name="method_name" value="{{ $method->method_name }}">
                       <br>
-                    支店名
-                      <input type="text" name="branch_name" value="{{ $bank->branch_name }}">
+                    締め日
+                      <input type="text" name="closing_date" value="{{ $method->closing_date }}" maxlength="2" size="2">日
                       <br>
-                    残高
-                      <input type="text" name="balance" value="{{ $bank->balance }}">
+                    支払口座
+                      <select name="bank_id">
+                        <option value="">選択してください</option>
+                        @foreach ($banks as $bank)
+                        <option value="{{ $bank->id }}" @if ($bank->id === $method->bank_id) selected @endif> {{ $bank->bank_name }} </option>
+                        @endforeach
+                      </select>
                       <br>
                       <input class="btn btn-info" type="submit" value="更新する">
                     </form>
-                    <form method="POST" action="{{ route('bank.destroy', ['id' => $bank->id]) }}" id="delete_{{ $bank->id }}">
+                    <form method="POST" action="{{ route('method.destroy', ['id' => $method->id]) }}" id="delete_{{ $method->id }}">
                      @csrf
-                       <a href="#" class="btn btn-danger" data-id="{{ $bank->id }}" onclick="deletePost(this);">削除する</a>
+                       <a href="#" class="btn btn-danger" data-id="{{ $method->id }}" onclick="deletePost(this);">削除する</a>
                    </form>
                 </div>
             </div>

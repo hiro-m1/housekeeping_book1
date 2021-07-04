@@ -54,6 +54,18 @@ class MethodController extends Controller
     public function store(Request $request)
     {
         //
+        $method = new Method();
+
+        //$_POST['name']
+        $method->method_name = $request->input('method_name');
+        $method->closing_date = $request->input('closing_date');
+        $method->bank_id = $request->input('bank_id');
+        $method->user_id = auth()->id();
+        
+        $method->save();
+        
+        $request->session()->regenerateToken();
+        return redirect('method/index');
     }
 
     /**
@@ -76,6 +88,24 @@ class MethodController extends Controller
     public function edit($id)
     {
         //
+        $query = DB::table('methods');
+
+        $query->join('banks', 'methods.bank_id', '=', 'banks.id');
+        $query->select('methods.id', 'method_name', 'closing_date', 'bank_id', 'bank_name');
+        $query->where('methods.user_id', auth()->id());
+        $query->where('methods.id', $id);
+        $method = $query->first();
+
+        $query_bank = DB::table('banks');
+        $query_bank->select('id', 'bank_name');
+        $query_bank->where('user_id', auth()->id());
+        $query_bank->orderBy('id', 'asc');
+        $banks = $query_bank->get();
+
+        // $query->select('id', 'bank_name', 'branch_name', 'balance');
+        // $query->where('user_id', auth()->id());
+
+        return view('method.edit', compact('method', 'banks'));
     }
 
     /**
@@ -88,6 +118,18 @@ class MethodController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $method =Method::find($id);
+
+        //$_POST['name']
+        $method->method_name = $request->input('method_name');
+        $method->closing_date = $request->input('closing_date');
+        $method->bank_id = $request->input('bank_id');
+        
+        $method->save();
+
+        $request->session()->regenerateToken();
+
+        return redirect('method/index');
     }
 
     /**
@@ -99,5 +141,10 @@ class MethodController extends Controller
     public function destroy($id)
     {
         //
+        $method = Method::find($id);
+
+        $method->delete();
+
+        return redirect('method/index');
     }
 }
